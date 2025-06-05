@@ -7,17 +7,28 @@ from datetime import datetime
 from django.utils.translation import gettext_lazy as _
 from unfold.contrib.filters.admin import TextFilter
 from django.core.validators import EMPTY_VALUES
+import os
+from dotenv import load_dotenv
+
+
+
+
+load_dotenv()
+
+
 
 def get_data_from_api():
    
 
-    headers = {'X-API-KEY':'EOh1Bt9a1aiwEOaCXkrzOxDOmgUNVMGSAeMStF6W',}
+    headers = {'X-API-KEY':os.getenv('API_KEY')}
 
     propertys_api = requests.get('https://test.controldepropiedades.com/api/propiedades/miraiz',headers=headers)
 
+    print('********** STATUS EXTERNAL API **********')
+    print(propertys_api)
+    print('*****************************************')
     results = json.loads(propertys_api.text)
     
-
     #new_property = Property()
 
 
