@@ -15,8 +15,18 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path,include
+from admin_notification.views import check_notification_view
+from django.views.generic.base import RedirectView
+from django.conf.urls.static import static
+from django.conf import settings
 
 urlpatterns = [
+    path('', RedirectView.as_view(url='admin/')),
     path('admin/', admin.site.urls),
+    path('properties/',include('property_catalog.urls')),
+    path('check/notification', check_notification_view, name="check_notifications"),
+    path('api/',include('api.urls'))
 ]
+
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -19,9 +19,12 @@ class Appointments(models.Model):
     nombre_cliente = models.CharField(max_length=255)
     telefono = models.CharField(max_length=8)
     email = models.CharField(max_length=50)
-    notas = models.TextField()
+    notas = models.TextField(blank=True,null=True)
     property = models.ForeignKey(Property,on_delete=models.CASCADE) 
     user = models.ForeignKey(User,on_delete=models.CASCADE)
 
     def __str__(self):
         return '{} - {}'.format(self.nombre_cliente,self.status)
+    
+    class Meta:
+        verbose_name_plural = "Listado"

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Propiedades Disponibles</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+  <div class="grid grid-cols-1 md:grid-cols-3 h-screen md:h-auto">
+
+    <!-- 📋 Listado de propiedades -->
+    <aside class="bg-white p-4 md:h-screen overflow-y-auto border-b md:border-r md:col-span-1">
+      <h2 class="text-xl font-bold mb-4">Propiedades disponibles</h2>
+      <ul class="space-y-3">
+        {% for p in portrait_properties %}
+        <li>
+          <a href="?id={{ p.property.id }}" class="flex flex-col sm:flex-row items-start sm:items-center gap-3 p-3 bg-gray-100 hover:bg-gray-200 rounded transition">
+            {% if p.url %}
+              <img src="{{ p.url }}" alt="{{ p.property.propiedad }}" class="w-full sm:w-16 h-40 sm:h-16 object-cover rounded border" />
+            {% else %}
+              <div class="w-full sm:w-16 h-40 sm:h-16 bg-gray-300 rounded"></div>
+            {% endif %}
+            <div class="mt-2 sm:mt-0">
+              <h3 class="font-semibold">{{ p.property.propiedad }}</h3>
+              <p class="text-sm text-gray-600">Q {{ p.property.precio }}</p>
+            </div>
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+    </aside>
+
+    <!-- 🏠 Detalle de la propiedad -->
+    <section class="p-4 col-span-2 overflow-y-auto">
+      <h2 class="text-2xl font-bold mb-4">Detalle de la propiedad</h2>
+
+      {% if property %}
+      <div class="bg-white p-4 rounded-lg shadow space-y-6">
+        <!-- Imagen + datos -->
+        <div class="flex flex-col md:flex-row gap-6">
+          {% if image_property %}
+            <img src="{{ image_property.url }}" alt="{{ property.nombre }}" class="w-full md:w-1/2 h-64 object-cover rounded-lg border">
+          {% else %}
+            <div class="w-full md:w-1/2 h-64 bg-gray-200 rounded-lg"></div>
+          {% endif %}
+
+          <div class="flex-1">
+            <h3 class="text-2xl font-bold mb-2">{{ property.propiedad }}</h3>
+            <p class="text-gray-700">📍 {{ property.ubicacion }}</p>
+            <p class="text-gray-700">💵 ${{ propiedad.precio }}</p>
+            <p class="text-gray-700">🛏 {{ propiedad.habitaciones }} habitaciones</p>
+            <p class="text-gray-700">🛁 {{ propiedad.baños }} baños</p>
+            <p class="mt-4 text-sm text-gray-500"> {{ propiedad.descripcion }}</p>
+          </div>
+        </div>
+
+        <!-- 💬 Comentarios -->
+        <div>
+          <h4 class="text-lg font-semibold mb-3">Comentarios</h4>
+
+          <!-- Lista de comentarios -->
+          <div class="space-y-4 mb-6">
+            {% for c in property.comentarios.all %}
+            <div class="bg-gray-100 p-3 rounded">
+              <p class="text-sm text-gray-800">{{ c.texto }}</p>
+            </div>
+            {% empty %}
+            <p class="text-gray-500">Aún no hay comentarios para esta propiedad.</p>
+            {% endfor %}
+          </div>
+
+          <!-- Formulario -->
+          <form method="POST" class="space-y-2">
+            {% csrf_token %}
+            {{ comentario_form.texto }}
+            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+              Enviar comentario
+            </button>
+          </form>
+        </div>
+      </div>
+      {% else %}
+        <p class="text-gray-500">Selecciona una propiedad para ver su detalle.</p>
+      {% endif %}
+    </section>
+
+  </div>
+</body>
+</html>

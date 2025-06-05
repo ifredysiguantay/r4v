@@ -1,0 +1,104 @@
+{% extends 'unfold/layouts/base_simple.html' %}
+
+{% load i18n unfold %}
+
+{% block breadcrumbs %}{% endblock %}
+
+{% block title %}
+    {% trans 'Dashboard' %} | {{ site_title|default:_('Django site admin') }}
+{% endblock %}
+
+{% block branding %}
+    <h1 id="site-name">
+        <a href="{% url 'admin:index' %}">
+            {{ site_header }}
+        </a>
+    </h1>
+{% endblock %}
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+{% block content %}
+    {% component "unfold/components/container.html" %}
+        {% component "unfold/components/flex.html" with class="gap-4"%}
+            {% component "unfold/components/navigation.html" with items=navigation %}{% endcomponent %}
+
+            {% component "unfold/components/navigation.html" with class="ml-auto" items=filters %}{% endcomponent %}
+        {% endcomponent %}
+
+        {% component "unfold/components/flex.html" with class="gap-8 mb-8 flex-col lg:flex-row" %}
+            {% for stats in kpi %}
+                {% trans "Last 7 days" as label %}
+                {% component "unfold/components/card.html" with class="lg:w-1/3" label=label footer=stats.footer %}
+                    {% component "unfold/components/text.html" %}
+                        {{ stats.title }}
+                    {% endcomponent %}
+
+                    {% component "unfold/components/title.html" %}
+                        {{ stats.metric }}
+                    {% endcomponent %}
+                {% endcomponent %}
+            {% endfor %}
+        {% endcomponent %}
+
+        {% trans "Resumen de estados de citas" as title %}
+        {% component "unfold/components/card.html" with class="mb-8" title=title %}
+     
+        <canvas id="myChart"></canvas>
+        <script>
+
+        let myChart;
+        var xValues = [];
+        var yValues = [];
+        fetch('/api')
+            .then(data => {
+            return data.json();
+            })
+            .then(data => { data.forEach(items=>{
+
+      
+                var barColors = [
+                "#b91d47",
+                "#00aba9",
+                "#2b5797",
+                ];
+
+                console.log(items.status)
+                console.log(items.total)
+
+                xValues.push(items.status)
+                yValues.push(items.total)
+
+                console.log(yValues)
+                if (myChart) {
+                        myChart.destroy();
+                    }
+
+                myChart =  new Chart("myChart", {
+                type: "doughnut",
+                data: {
+                    labels: xValues,
+                    datasets: [{
+                    backgroundColor: barColors,
+                    data: yValues
+                    }]
+                },
+                options: {
+                    title: {
+                    display: true,
+                    text: ""
+                    },responsive:false
+                }
+                });
+            })});
+
+
+  
+        </script>
+        {% endcomponent %}
+
+
+    {% endcomponent %}
+{% endblock %}
