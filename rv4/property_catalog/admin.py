@@ -21,8 +21,9 @@ def get_data_from_api():
    
 
     headers = {'X-API-KEY':os.getenv('API_KEY')}
+    api_url = os.getenv('API_URL')
 
-    propertys_api = requests.get('https://test.controldepropiedades.com/api/propiedades/miraiz',headers=headers)
+    propertys_api = requests.get(api_url,headers=headers)
 
     print('********** STATUS EXTERNAL API **********')
     print(propertys_api)

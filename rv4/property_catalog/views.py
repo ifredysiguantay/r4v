@@ -19,7 +19,7 @@ def list(request):
 
     if property_id:
         property = get_object_or_404(Property,pk = property_id)
-        image_property = Images.objects.get(property__id=property_id,tipo='ingreso')
+        image_property = Images.objects.filter(property__id=property_id).first()
         if request.method == 'POST':
             comentario_form = ComentarioForm(request.POST)
             if comentario_form.is_valid():
