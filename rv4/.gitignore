@@ -1,0 +1,9 @@
+.env
+db.sqlite3
+**/__pycache__/
+appointments/__pycache__
+media/images/
+property_catalog/__pycache__
+api/__pycache__
+*.py[cod]
+*$py.class
